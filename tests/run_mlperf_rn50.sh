@@ -37,9 +37,15 @@ if [ ! -f ~/.setup_rn50 ]; then
         fi
 
         pushd $MODEL_DIR
-        [ ! -f resnet50_v1.pb ] && wget -O resnet50_v1.pb https://zenodo.org/record/2535873/files/resnet50_v1.pb || die "failed to download"
-        [ ! -f resnet50-19c8e357.pth ] && wget -O resnet50-19c8e357.pth https://zenodo.org/record/4588417/files/resnet50-19c8e357.pth || die "failed to download"
-        [ ! -f resnet50_v1.onnx ] && wget -O resnet50_v1.onnx https://zenodo.org/record/2592612/files/resnet50_v1.onnx || die "failed to download"
+        if [ ! -f resnet50_v1.pb ]; then
+		wget -O resnet50_v1.pb https://zenodo.org/record/2535873/files/resnet50_v1.pb || die "failed to download"
+	fi
+        if [ ! -f resnet50-19c8e357.pth ]; then
+		wget -O resnet50-19c8e357.pth https://zenodo.org/record/4588417/files/resnet50-19c8e357.pth || die "failed to download"
+	fi
+        if [ ! -f resnet50_v1.onnx ]; then
+		wget -O resnet50_v1.onnx https://zenodo.org/record/2592612/files/resnet50_v1.onnx || die "failed to download"
+	fi
         popd
 
         touch ~/.setup_rn50
