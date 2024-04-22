@@ -51,23 +51,12 @@ if [ ! -f ~/.setup_rn50 ]; then
         touch ~/.setup_rn50
 fi
 
-STREAM=MultiStream
+STREAM=Offline
 
 USER_CONF=$HOME/examples/MLCommons/inference/vision/classification_and_detection/user.conf
 
 if [ "$1" == "single" ]; then
         STREAM=SingleStream
-        sed -i '/min_query_count/d' $USER_CONF
-        sed -i '/performance_sample_count_override/d' $USER_CONF
-else
-        grep 'min_query_count = 1' $USER_CONF > /dev/null
-
-        if [ $? -ne 0 ]; then
-                echo '' >> $USER_CONF
-                echo '*.*.min_query_count = 1' >> $USER_CONF
-                echo '*.*.performance_sample_count_override = 1' >> $USER_CONF
-        fi
-
 fi
 
 cd $HOME/examples/MLCommons/inference/vision/classification_and_detection
