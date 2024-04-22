@@ -19,7 +19,7 @@ install_package() {
 }
 
 install_python_package() {
-        python -m pip list |grep $1
+	pip show $1 > /dev/null 2>&1
         if [ $? -ne 0 ]; then
                 python -m pip install $1 $2
         fi

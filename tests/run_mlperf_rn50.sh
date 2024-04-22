@@ -7,6 +7,13 @@ popd
 
 $TOP_DIR/tests/setup_mlperf.sh
 
+source $TOP_DIR/scripts/lib.sh
+
+pip show ck > /dev/null
+if [ $? -ne 0 ]; then
+	install_python_package ck==1.55.5
+fi
+
 export DATA_DIR=/data/datasets/dataset-imagenet-ilsvrc2012-val-min
 export MODEL_DIR=/data/models
 
@@ -30,9 +37,9 @@ if [ ! -f ~/.setup_rn50 ]; then
         fi
 
         pushd $MODEL_DIR
-        [ ! -f resnet50_v1.pb ] && wget -O resnet50_v1.pb https://zenodo.org/record/2535873/files/resnet50_v1.pb
-        [ ! -f resnet50-19c8e357.pth ] && wget -O resnet50-19c8e357.pth https://zenodo.org/record/4588417/files/resnet50-19c8e357.pth
-        [ ! -f resnet50_v1.onnx ] && wget -O resnet50_v1.onnx https://zenodo.org/record/2592612/files/resnet50_v1.onnx
+        [ ! -f resnet50_v1.pb ] && wget -O resnet50_v1.pb https://zenodo.org/record/2535873/files/resnet50_v1.pb || die "failed to download"
+        [ ! -f resnet50-19c8e357.pth ] && wget -O resnet50-19c8e357.pth https://zenodo.org/record/4588417/files/resnet50-19c8e357.pth || die "failed to download"
+        [ ! -f resnet50_v1.onnx ] && wget -O resnet50_v1.onnx https://zenodo.org/record/2592612/files/resnet50_v1.onnx || die "failed to download"
         popd
 
         touch ~/.setup_rn50
