@@ -16,6 +16,14 @@ fi
 
 [ ! -d $MLPERF_DIR ] && mkdir -p $MLPERF_DIR
 
+is_root=`id -u`
+if [ $is_root -eq 0 ]; then
+	apt update
+else
+	sudo apt update
+fi
+install_package build-essential
+install_package git
 install_python_package pybind11
 
 cd $MLPERF_DIR

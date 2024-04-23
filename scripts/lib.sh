@@ -5,15 +5,25 @@ die() {
 }
 
 install_package() {
+	is_root=`id -u`
         which yum > /dev/null
         if [ $? -eq 0 ]; then
-                sudo yum install $1
+		if [ $is_root -eq 0 ]; then
+			yum install $1 -y
+		else
+			sudo yum install $1 -y
+		fi
                 return
         fi
 
         which apt > /dev/null
         if [ $? -eq 0 ]; then
-                sudo apt install $1 -y
+		if [ $is_root -eq 0 ]; then
+			apt install $1 -y
+		else
+			sudo apt install $1 -y
+		fi
+
                 return
         fi
 }
