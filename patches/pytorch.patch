@@ -1,0 +1,51 @@
+diff --git a/vision/classification_and_detection/python/backend_pytorch_native.py b/vision/classification_and_detection/python/backend_pytorch_native.py
+index a302ae0..cc2a8fb 100755
+--- a/vision/classification_and_detection/python/backend_pytorch_native.py
++++ b/vision/classification_and_detection/python/backend_pytorch_native.py
+@@ -12,6 +12,7 @@ class BackendPytorchNative(backend.Backend):
+         super(BackendPytorchNative, self).__init__()
+         self.sess = None
+         self.model = None
++        self.model_path = None
+         self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
+ 
+     def version(self):
+@@ -24,8 +25,16 @@ class BackendPytorchNative(backend.Backend):
+         return "NCHW"
+ 
+     def load(self, model_path, inputs=None, outputs=None):
+-        self.model = torch.load(model_path, map_location=lambda storage, loc: storage)
++        self.model_path = model_path
++        if "resnet50" in model_path:
++            from torchvision.models.resnet import resnet50
++            self.model = resnet50(weights=None)
++            self.model.load_state_dict(torch.load(model_path,map_location=lambda storage, loc: storage))
++        else:
++            self.model = torch.load(model_path, map_location=lambda storage, loc: storage)
++
+         self.model.eval()
++
+         # find inputs from the model if not passed in by config
+         if inputs:
+             self.inputs = inputs
+@@ -54,4 +63,4 @@ class BackendPytorchNative(backend.Backend):
+         feed[key] = torch.tensor(feed[key]).float().to(self.device)
+         with torch.no_grad():
+             output = self.model(feed[key])
+-        return output
++        return [output] if "resnet50" in self.model_path else output
+diff --git a/vision/classification_and_detection/python/main.py b/vision/classification_and_detection/python/main.py
+index 7b2348b..a73f898 100755
+--- a/vision/classification_and_detection/python/main.py
++++ b/vision/classification_and_detection/python/main.py
+@@ -98,8 +98,8 @@ SUPPORTED_PROFILES = {
+     "resnet50-pytorch": {
+         "inputs": "image",
+         "outputs": "ArgMax:0",
+-        "dataset": "imagenet",
+-        "backend": "tensorflow",
++        "dataset": "imagenet_pytorch",
++        "backend": "pytorch-native",
+         "model-name": "resnet50",
+     },
+     "resnet50-onnxruntime": {
