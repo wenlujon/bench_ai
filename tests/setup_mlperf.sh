@@ -26,7 +26,7 @@ install_package build-essential
 install_package git
 install_python_package pybind11
 install_python_package protobuf
-install_package pybind11-dev
+#install_package pybind11-dev
 
 cd $MLPERF_DIR
 
@@ -39,6 +39,13 @@ patch -p1 < $TOP_DIR/patches/pytorch.patch || die "failed to patch pytorch"
 #git submodule init
 #git submodule update --remote --recursive
 cd loadgen
+
+# Run command to get pybind11 installation directory
+include_dir=$(python -c "import pybind11; print(pybind11.get_include())")
+
+# Modify setup.py file to add the include directory
+sed -i "s|include_dirs=\[\".\", \"../third_party/pybind/include\"\]|include_dirs=\[\".\", \"../third_party/pybind/include\", \"$include_dir\"\]|" setup.py
+
 CFLAGS="-std=c++14" python setup.py develop || die "failed to build loadgen"
 cd $MLPERF_DIR/inference/vision/classification_and_detection
 python setup.py develop || die "failed to build classification"
