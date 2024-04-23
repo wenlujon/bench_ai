@@ -61,4 +61,8 @@ fi
 
 cd $HOME/examples/MLCommons/inference/vision/classification_and_detection
 
-./run_local.sh $2 resnet50 cpu --scenario $STREAM
+if [ "$2" == "pytorch" ]; then
+	./run_local.sh $2 resnet50 cpu --scenario $STREAM --backend pytorch-native
+else
+	./run_local.sh $2 resnet50 cpu --scenario $STREAM
+fi

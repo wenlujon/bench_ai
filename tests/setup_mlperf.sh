@@ -25,12 +25,17 @@ fi
 install_package build-essential
 install_package git
 install_python_package pybind11
+install_python_package protobuf
+install_package pybind11-dev
 
 cd $MLPERF_DIR
 
 git clone https://github.com/mlcommons/inference.git --recursive || die "failed to clone mlperf"
 cd inference/
-git checkout v3.1
+git checkout v2.1 || die "failed to checkout v2.1"
+
+patch -p1 < $TOP_DIR/patches/pytorch.patch || die "failed to patch pytorch"
+
 #git submodule init
 #git submodule update --remote --recursive
 cd loadgen
