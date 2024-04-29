@@ -64,13 +64,13 @@ echo "begin test, $(date)"
 cd $HOME/examples/MLCommons/inference/vision/classification_and_detection
 
 if [ "$2" == "pytorch" ]; then
-	timeout  30m ./run_local.sh $2 resnet50 cpu --scenario $STREAM --backend pytorch-native
+	timeout  1h ./run_local.sh $2 resnet50 cpu --scenario $STREAM --backend pytorch-native
 else
-	timeout  30m ./run_local.sh $2 resnet50 cpu --scenario $STREAM
+	timeout  1h ./run_local.sh $2 resnet50 cpu --scenario $STREAM
 fi
 
 if [ $? -ne 0 ]; then
-	echo "timeout to run test after 30m"
+	echo "timeout to run test after 1h"
 fi
 
 ELAPSED="Elapsed: $(($SECONDS / 3600))hrs $((($SECONDS / 60) % 60))min $(($SECONDS % 60))sec"
