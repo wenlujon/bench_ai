@@ -114,7 +114,7 @@ build_tf() {
         export PATH=$PATH:/home/test/.local/bin/
         create_repo tensorflow https://github.com/tensorflow/tensorflow
         if [ $? -eq 0 ];then
-                git checkout v2.14.0
+                git checkout v2.15.0
         fi
         cd ..
 
